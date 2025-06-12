@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fixo WhatsApp Catalog Split & Download</title>
+  <style>
+      
+    body {
+      font-family: railway;
+      text-align: center;
+      padding: 20px;
+      background-image:     url('https://files.catbox.moe/doi2pg.png');
+      margin: 0;
+      justify-content: center;
+}
+    }
+    
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr);   gap: 4px; max-width: 600px; margin: auto; }
+    .grid img { width: 100%; object-fit: cover; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+      max-width: 600px;
+      margin: 20px auto;
+    }
+    .grid img {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      border: 1px solid #ddd;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      display: inline-block;
+      background: red;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+}
+   input {
+       color: #f0f0f0;
+       font-family: Arial,sans-serif;
+   }
+   h2 {
+       font-family: 'Poppins' , sans-serif;
+       color: #f0f0f0;
+   }
+   h1 {
+       color: red;
+       font-family: ;
+       text-align: left;
+   }
+   h5 {
+       color: #cdcdcd;
+       text-align: center;
+   }
+   h3 {
+       color: #ffd215;
+       text-align: left;
+   }
+   h4 {
+       color: white;
+       text-align: left;
+   }
+   a {
+       color: red;
+       font-size: 25px;
+       justify-content: left;
+   }
+
+  </style>
+</head>
+<body>
+
+  <h1><ins>FIXO WHATSAPP CATALOG SPLITER</ins></h1><br><br>
+  <h2>Upload Image to Create 6-Part Whatsapp Catalog</h2>
+  <input type="file" id="imgInput" accept="image/*"><br><br>
+  <button id="downloadBtn" disabled>Download ZIP</button><br>
+  <h3><i><b>HOW TO USE THIS WEB</b></i></h2>
+  <h4>• upload image</h4>
+  <h4>• Shows a preview in a 3×2 grid</h4>
+  <h4>• Create and download ZIP directly to device </h4>
+  <a href="https://wa.me/+94711767300?text=*𝗛𝗘𝗬_𝗙𝗜𝗫𝗢_𝗫𝗗">CONTACT ME</a>
+   <h5>• CREATED BY FIXO XD</h5>
+  <div class="grid" id="grid"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script>
+    const input = document.getElementById('imgInput');
+    const grid = document.getElementById('grid');
+  const downloadBtn = document.getElementById('downloadBtn');
+    let zip = new JSZip();
+
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      img.onload = () => {
+        const cols = 3, rows = 2;
+        const partW = img.width / cols;
+        const partH = img.height / rows;
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        grid.innerHTML = '';
+        zip = new JSZip();
+
+        for (let i = 0; i < cols * rows; i++) {
+          const x = (i % cols) * partW;
+          const y = Math.floor(i / cols) * partH;
+
+          canvas.width = partW;
+          canvas.height = partH;
+          ctx.clearRect(0, 0, partW, partH);
+          ctx.drawImage(img, x, y, partW, partH, 0, 0, partW, partH);
+          const dataUrl = canvas.toDataURL("image/png");
+
+          // Add to grid preview
+          const preview = new Image();
+          preview.src = dataUrl;
+          grid.appendChild(preview);
+
+          // Add to ZIP
+          zip.file(`part${i + 1}.png`, dataUrl.split(',')[1], { base64: true });
+        }
+
+        downloadBtn.disabled = false;
+      };
+    };
+
+    downloadBtn.onclick = () => {
+    zip.generateAsync({ type: 'blob' }).then((content) => {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(content);
+        a.download = 'instagram_grid.zip';
+        a.click();
+      });
+    };
+  </script>
+</body>
+</html>
